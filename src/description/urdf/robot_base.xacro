@@ -84,9 +84,6 @@
     </xacro:macro>
 
     <!-- ── LEFT suspension joint ─────────────────────────────────────
-         This is the FREE joint — terrain forces drive it passively.
-         No command interface. gz_ros2_control reads this to compute
-         the right joint position every physics tick.
     ─────────────────────────────────────────────────────────────────── -->
     <xacro:suspension_arm side="left" pivot_y="${susp_left_y}"/>
 
@@ -103,10 +100,6 @@
          MIMIC joint. Follows left with multiplier -1.0:
            right_angle = left_angle × -1.0
          This enforces the differential rocker behaviour:
-           left arm tilts forward → right arm tilts backward
-         effort="0": passive, no motor.
-         gz_ros2_control reads the <mimic> tag and enforces it in
-         the physics engine every simulation tick.
     ─────────────────────────────────────────────────────────────────── -->
     <xacro:suspension_arm side="right" pivot_y="${susp_right_y}"/>
 
@@ -117,19 +110,14 @@
       <axis xyz="0 1 0"/>
       <limit lower="-1.047" upper="1.047" effort="0" velocity="1.0"/>
       <dynamics damping="0.5" friction="0.1"/>
-      <!-- ═══ DIFFERENTIAL ROCKER CONSTRAINT ═══
-           right = left × -1.0
-           Enforced visually by robot_state_publisher (RViz).
-           Enforced in physics by gz_ros2_control GazeboSimSystem
-           (no separate plugin needed for Gazebo Ignition + Jazzy). -->
       <mimic joint="left_suspension_joint" multiplier="-1.0" offset="0"/>
     </joint>
 
     <!-- ══════════════════════════════════════════════════════════════
          WHEEL MACRO
          ── vis_rpy parameter controls which face points outward ──────
-           left  wheels : vis_rpy="1.5708 0 0"        (unchanged)
-           right wheels : vis_rpy="1.5708 0 3.14159"  (Rz 180° flip)
+           left  wheels : vis_rpy="1.5708 0 0"        
+           right wheels : vis_rpy="1.5708 0 3.14159"  
          ══════════════════════════════════════════════════════════════ -->
     <xacro:macro name="wheel" params="name parent x y z vis_rpy">
 
@@ -175,7 +163,7 @@
 
     </xacro:macro>
 
-    <!-- Left  wheels : vis_rpy unchanged "1.5708 0 0" -->
+    <!-- Left  wheels -->
     <xacro:wheel name="front_left_wheel"
                  parent="left_suspension_link"
                  x="${susp_front_x}" y="${susp_front_y}" z="${susp_front_z}"
@@ -185,7 +173,7 @@
                  x="${susp_rear_x}" y="${susp_rear_y}" z="${susp_rear_z}"
                  vis_rpy="1.5708 0 0"/>
 
-    <!-- Right wheels : Rz 180° flips the outer face to point outward -->
+    <!-- Right wheels -->
     <xacro:wheel name="front_right_wheel"
                  parent="right_suspension_link"
                  x="${susp_front_x}" y="${-susp_front_y}" z="${susp_front_z}"
