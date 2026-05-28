@@ -9,3 +9,4 @@ digest*.txt
 .antigravitycli
 __pycache__/
 *.pyc
+venv/
