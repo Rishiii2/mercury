@@ -22,9 +22,12 @@
     <xacro:property name="susp_rear_y"   value="-0.068"/>
     <xacro:property name="susp_rear_z"   value="-0.278"/>
 
-
     <!-- ══════════════════════════════════════════════════════════════
          BASE LINK
+         base_link origin = chassis centre (midpoint of body).
+         Lowest point (front wheel bottom) = susp_pivot_z + susp_front_z - wheel_radius
+                                           = 0.313 - 0.389 - 0.155 = -0.231 m
+         → spawn the robot at z ≥ 0.25 in your launch file.
          ══════════════════════════════════════════════════════════════ -->
     <link name="base_link">
       <visual>
@@ -38,11 +41,13 @@
         <geometry>
           <box size="${base_width} ${base_length} ${base_height}"/>
         </geometry>
-        <origin xyz="0 0 ${wheel_radius*2 + base_height/2}" rpy="0 0 0"/>
+        <!-- Centred at base_link origin (chassis midpoint) -->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
       </collision>
       <inertial>
         <mass value="10.0"/>
-        <origin xyz="0 0 ${wheel_radius*2 + base_height/2}"/>
+        <!-- CoM at chassis centre -->
+        <origin xyz="0 0 0"/>
         <inertia ixx="0.2" iyy="0.2" izz="0.2" ixy="0" ixz="0" iyz="0"/>
       </inertial>
     </link>
@@ -66,7 +71,7 @@
           </geometry>
         </visual>
         <collision>
-          <geometry><box size="1.2 0.1 0.15"/></geometry>
+          <geometry><box size="0.01 0.01 0.01"/></geometry>
           <origin xyz="0 0 0" rpy="0 0 0"/>
         </collision>
         <inertial>
@@ -83,8 +88,7 @@
 
     </xacro:macro>
 
-    <!-- ── LEFT suspension joint ─────────────────────────────────────
-    ─────────────────────────────────────────────────────────────────── -->
+    <!-- ── LEFT suspension ───────────────────────────────────────── -->
     <xacro:suspension_arm side="left" pivot_y="${susp_left_y}"/>
 
     <joint name="left_suspension_joint" type="revolute">
@@ -96,11 +100,7 @@
       <dynamics damping="0.5" friction="0.1"/>
     </joint>
 
-    <!-- ── RIGHT suspension joint ────────────────────────────────────
-         MIMIC joint. Follows left with multiplier -1.0:
-           right_angle = left_angle × -1.0
-         This enforces the differential rocker behaviour:
-    ─────────────────────────────────────────────────────────────────── -->
+    <!-- ── RIGHT suspension (mimic) ─────────────────────────────── -->
     <xacro:suspension_arm side="right" pivot_y="${susp_right_y}"/>
 
     <joint name="right_suspension_joint" type="revolute">
@@ -113,11 +113,9 @@
       <mimic joint="left_suspension_joint" multiplier="-1.0" offset="0"/>
     </joint>
 
+
     <!-- ══════════════════════════════════════════════════════════════
          WHEEL MACRO
-         ── vis_rpy parameter controls which face points outward ──────
-           left  wheels : vis_rpy="1.5708 0 0"        
-           right wheels : vis_rpy="1.5708 0 3.14159"  
          ══════════════════════════════════════════════════════════════ -->
     <xacro:macro name="wheel" params="name parent x y z vis_rpy">
 
@@ -156,8 +154,10 @@
       </joint>
 
       <gazebo reference="${name}_link">
-        <mu1>0.8</mu1>
-        <mu2>0.8</mu2>
+        <mu1>2.0</mu1>
+        <mu2>2.0</mu2>
+        <kp>1e6</kp>
+        <kd>1.0</kd>
         <self_collide>false</self_collide>
       </gazebo>
 
@@ -323,6 +323,5 @@
   </xacro:macro>
 
 </robot>
-
 
 
