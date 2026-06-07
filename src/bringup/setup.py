@@ -32,6 +32,7 @@ setup(
         'console_scripts': [
             'twist_to_stamped = bringup.twist_to_stamped:main',
             'goal_decomposer  = bringup.goal_decomposer:main',
+            'mercury_driver   = bringup.mercury_driver:main',
         ],
     },
 )

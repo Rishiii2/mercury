@@ -1,4 +1,12 @@
 rm -rf install log build
 colcon build
 source install/setup.bash
-ros2 launch bringup bringup_sim.launch.py
+export PYTHONNOUSERSITE=1
+
+
+if command -v nvidia-smi &> /dev/null && command -v prime-select &> /dev/null && prime-select query | grep -q "on-demand"; then
+    echo "Nvidia GPU detected in On-Demand mode. Offloading simulation rendering to GPU..."
+    __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia ros2 launch bringup bringup_sim.launch.py
+else
+    ros2 launch bringup bringup_sim.launch.py
+fi

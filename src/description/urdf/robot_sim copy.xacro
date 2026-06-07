@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="sim">
+
+    <!-- gz_ros2_control: loads controllers and enforces software-mimic joints -->
+    <gazebo>
+      <plugin filename="libgz_ros2_control-system.so"
+              name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find description)/config/controllers.yaml</parameters>
+      </plugin>
+    </gazebo>
+
+    <!-- JointMimic system plugin: physics-level fallback for the suspension
+         differential. right_suspension_joint = -1 × left_suspension_joint.
+         Required because Gazebo Harmonic's default DART physics engine ignores
+         the URDF <mimic> tag — this plugin enforces it at the Gazebo system level.
+         Both this AND the ros2_control mimic param above are needed:
+           • ros2_control param  → enforces coupling during controller updates
+           • JointMimic plugin   → enforces coupling in the physics step (passive motion) -->
+    <gazebo>
+      <plugin filename="gz-sim-mimic-joint-system"
+              name="gz::sim::systems::MimicJoint">
+        <joint>right_suspension_joint</joint>
+        <parent_joint>left_suspension_joint</parent_joint>
+        <multiplier>-1.0</multiplier>
+        <offset>0.0</offset>
+        <dead_zone>0.0</dead_zone>
+      </plugin>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

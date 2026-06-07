@@ -14,7 +14,15 @@
       <state_interface name="velocity"/>
     </joint>
 
+    <!-- right_suspension_joint mirrors left at -1× via gz_ros2_control software mimic.
+         This is the correct fix for Gazebo Harmonic / ROS2 Jazzy because the default
+         DART physics engine does NOT support native mimic constraints at the physics
+         level. gz_ros2_control reads the <param name="mimic"> tag and enforces the
+         coupling in the control layer instead. -->
     <joint name="right_suspension_joint">
+      <param name="mimic">left_suspension_joint</param>
+      <param name="multiplier">-1.0</param>
+      <param name="offset">0.0</param>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>

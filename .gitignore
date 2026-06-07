@@ -7,3 +7,5 @@ frames_*
 .vscode/
 digest*.txt
 .antigravitycli
+__pycache__/
+*.pyc

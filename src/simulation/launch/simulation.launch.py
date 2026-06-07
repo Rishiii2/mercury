@@ -1,10 +1,11 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import ExecuteProcess, TimerAction
+from launch.actions import ExecuteProcess, TimerAction, SetEnvironmentVariable, DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from launch.conditions import IfCondition, UnlessCondition
 from ament_index_python.packages import get_package_share_directory
 import os
 import xacro
-from launch.actions import ExecuteProcess, TimerAction, SetEnvironmentVariable
 
 def generate_launch_description():
 
@@ -41,6 +42,12 @@ def generate_launch_description():
 
     return LaunchDescription([
 
+        DeclareLaunchArgument(
+            'headless',
+            default_value='false',
+            description='Run Gazebo in headless mode (server only)'
+        ),
+
         SetEnvironmentVariable('GZ_IP', '127.0.0.1'),
 
         SetEnvironmentVariable(
@@ -48,8 +55,16 @@ def generate_launch_description():
             os.path.join(pkg_sim, 'models') + ':' + os.path.join(pkg_sim, 'models', 'images'),
 
         ),
+        # Launch Gazebo in headless mode (server only)
+        ExecuteProcess(
+            cmd=['gz', 'sim', '-s', '-r', world_file],
+            condition=IfCondition(LaunchConfiguration('headless')),
+            output='screen'
+        ),
+        # Launch Gazebo with GUI
         ExecuteProcess(
             cmd=['gz', 'sim', '-r', world_file],
+            condition=UnlessCondition(LaunchConfiguration('headless')),
             output='screen'
         ),
 
@@ -58,9 +73,10 @@ def generate_launch_description():
             executable='create',
             arguments=[
                 '-topic', 'robot_description',
-                '-x', '24.25',
-                '-y', '-22.5',
+                '-x', '25.5',
+                '-y', '-18.5',
                 '-Y', '-1.57',
+                '-z', '1.5',
             ],
             parameters=[{'use_sim_time': True}],    
             output='screen'
@@ -80,9 +96,9 @@ def generate_launch_description():
                     package='controller_manager',
                     executable='spawner',
                     arguments=[
-                        'diff_drive_controller',
+                        'mercury_drive_controller',
                         '--controller-ros-args',
-                        '--ros-args --remap /diff_drive_controller/cmd_vel:=/cmd_vel_stamped'
+                        '--ros-args --remap /mercury_drive_controller/cmd_vel:=/cmd_vel_stamped'
                     ],
                     parameters=[{'use_sim_time': True}],
                     output='screen'
