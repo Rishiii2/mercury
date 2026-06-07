@@ -204,3 +204,31 @@ echo $GZ_SIM_RESOURCE_PATH
 rm -rf build/ install/ log/
 colcon build
 ```
+
+---
+
+## Custom Driver & Controller (Mercury Drive)
+
+A custom C++ hardware controller plugin (`mercury_drive_controller`) and a Python driver node (`mercury_driver.py`) are provided to bridge high-level ROS 2 velocity commands and low-level drive actuator interfaces.
+
+### Features
+- **`mercury_drive_controller`**: A custom ROS 2 Control hardware controller plugin that accepts vehicle velocity and maps it to specific actuator states, handling kinematics and velocity commands.
+- **`mercury_driver`**: Bridge node that translates control system states into lower-level hardware commands and publishes odometry data.
+- **`check_wheel_rotation.py`**: Helper script to quickly verify physical wheel direction of rotation.
+- **`test_custom_driver.sh`**: Helper script to verify control loop initialization in headless mode.
+- **`test_driver_run.sh`**: Automates launching the simulation, publishing velocity commands (`/cmd_vel_nav`), and verifying both driver-computed and ground-truth odometry.
+
+### Running Driver Verification Tests
+To test the custom driver in simulation:
+
+1. Ensure the workspace is built:
+   ```bash
+   colcon build
+   source install/setup.bash
+   ```
+
+2. Run the automated test script:
+   ```bash
+   ./test_driver_run.sh
+   ```
+   This script launches the simulation in the background, waits for controllers to load, sends a movement command, and displays odometry before shutting down.
