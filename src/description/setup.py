@@ -18,6 +18,7 @@ setup(
             glob('urdf/*')),
         (os.path.join('share', package_name, 'config'),
             glob('config/*')),
+        (os.path.join('share', package_name, 'meshes'), glob('meshes/*.dae')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -32,6 +33,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'process_urdf = description.process_urdf:main',
         ],
     },
 )

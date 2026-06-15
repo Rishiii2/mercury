@@ -1,9 +1,16 @@
 # mercury
+# mercury
 
+Official repository for ICMTC UGVC-2026
 Official repository for ICMTC UGVC-2026
 
 ## Prerequisites
 
+* Ubuntu 24.04
+* ROS 2 Jazzy
+* colcon
+* rosdep
+* Docker (optional)
 * Ubuntu 24.04
 * ROS 2 Jazzy
 * colcon
@@ -14,6 +21,7 @@ Official repository for ICMTC UGVC-2026
 
 ## First-Time Setup (Fresh Clone)
 
+This repository is already a ROS 2 workspace.
 This repository is already a ROS 2 workspace.
 
 ```bash
@@ -33,6 +41,7 @@ colcon build
 
 # Source workspace
 source install/setup.bash
+
 ```
 
 ---
@@ -88,6 +97,7 @@ Apply:
 
 ```bash
 source ~/.bashrc
+
 ```
 
 ---
@@ -97,6 +107,7 @@ source ~/.bashrc
 ```bash
 sudo docker compose build
 sudo docker compose run ros
+
 ```
 
 ---
@@ -107,17 +118,33 @@ sudo docker compose run ros
 cd mercury
 source install/setup.bash
 colcon build
+colcon build
 ros2 launch bringup bringup_sim.launch.py
+
 ```
 
 ---
 
 ## watchdog_monitor
+## watchdog_monitor
 
+A non-intrusive ROS 2 monitoring and observability package for the Mercury robot. Runs alongside the existing stack without modifying control logic.
 A non-intrusive ROS 2 monitoring and observability package for the Mercury robot. Runs alongside the existing stack without modifying control logic.
 
 ### Nodes
+### Nodes
 
+| Node | Publishes | Rate | Description |
+| --- | --- | --- | --- |
+| `system_monitor_node` | `/system_status` | 2s | Tracks running vs expected nodes and publishes JSON health |
+| `watchdog_node` | `/system_alerts` | 3s | Detects node crashes, topic silence, TF failures |
+| `waypoint_detector_node` | `/waypoint_reached`, `/waypoint_status` | 10Hz / 1Hz | Detects arrival at predefined waypoints |
+| `control_listener_node` | — | Event-driven | Passive observer logging monitoring events |
+| `monitoring_dashboard` | — | 1Hz | Live terminal dashboard |
+
+### Launching the Watchdog
+
+To build and launch the watchdog monitoring system:
 | Node | Publishes | Rate | Description |
 | --- | --- | --- | --- |
 | `system_monitor_node` | `/system_status` | 2s | Tracks running vs expected nodes and publishes JSON health |
@@ -140,6 +167,7 @@ To spin up the live terminal dashboard:
 
 ```bash
 ros2 launch watchdog_monitor dashboard.launch.py
+
 ```
 
 ---
@@ -154,8 +182,12 @@ waypoint_detector_node:
     spawn_x: -21.0
     spawn_y: -47.0
     waypoints: [-19.0, -47.0, -19.0, -43.0, -21.0, -43.0]
+    spawn_x: -21.0
+    spawn_y: -47.0
+    waypoints: [-19.0, -47.0, -19.0, -43.0, -21.0, -43.0]
     waypoint_names: ["WP-1", "WP-2", "WP-3"]
     arrival_radius: 0.5
+
 ```
 
 > **Note:** `spawn_x` and `spawn_y` must match the `-x` / `-y` values passed to `ros_gz_sim create` in the launch file. Waypoints are specified in world coordinates — the node offsets odometry by the spawn position automatically.
@@ -184,6 +216,10 @@ ros2 launch face_task face_task.launch.py target_image:=/home/soap/probes/mercur
 
 ## Topics
 
+| Topic | Type | Publisher |
+| --- | --- | --- |
+| `/system_status` | `std_msgs/String` (JSON) | `system_monitor_node` |
+| `/system_alerts` | `std_msgs/String` (JSON) | `watchdog_node` |
 | Topic | Type | Publisher |
 | --- | --- | --- |
 | `/system_status` | `std_msgs/String` (JSON) | `system_monitor_node` |
@@ -239,11 +275,39 @@ ros2 topic pub --once /waypoint_reached std_msgs/msg/String \
   '{"data": "{\"event\": \"waypoint_reached\", \"waypoint\": {\"name\": \"WP-2\", \"index\": 2}}"}'
 ```
 
----
+--- 
 
-## Clean Build
+### Clean Build
 
 ```bash
 rm -rf build/ install/ log/
 colcon build
 ```
+
+---
+
+## Custom Driver & Controller (Mercury Drive)
+
+A custom C++ hardware controller plugin (`mercury_drive_controller`) and a Python driver node (`mercury_driver.py`) are provided to bridge high-level ROS 2 velocity commands and low-level drive actuator interfaces.
+
+### Features
+- **`mercury_drive_controller`**: A custom ROS 2 Control hardware controller plugin that accepts vehicle velocity and maps it to specific actuator states, handling kinematics and velocity commands.
+- **`mercury_driver`**: Bridge node that translates control system states into lower-level hardware commands and publishes odometry data.
+- **`check_wheel_rotation.py`**: Helper script to quickly verify physical wheel direction of rotation.
+- **`test_custom_driver.sh`**: Helper script to verify control loop initialization in headless mode.
+- **`test_driver_run.sh`**: Automates launching the simulation, publishing velocity commands (`/cmd_vel_nav`), and verifying both driver-computed and ground-truth odometry.
+
+### Running Driver Verification Tests
+To test the custom driver in simulation:
+
+1. Ensure the workspace is built:
+   ```bash
+   colcon build
+   source install/setup.bash
+   ```
+
+2. Run the automated test script:
+   ```bash
+   ./test_driver_run.sh
+   ```
+   This script launches the simulation in the background, waits for controllers to load, sends a movement command, and displays odometry before shutting down.

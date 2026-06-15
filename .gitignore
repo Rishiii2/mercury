@@ -1,8 +1,10 @@
+venv/
+build/
+install/
 log/
 frames_*
 .vscode/
 digest*.txt
 .antigravitycli
-venv/
-build/
-install/
+__pycache__/
+*.pyc

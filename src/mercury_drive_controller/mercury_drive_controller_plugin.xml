@@ -1,0 +1,12 @@
+<library path="mercury_drive_controller">
+  <class
+    name="mercury_drive_controller/MercuryDriveController"
+    type="mercury_drive_controller::MercuryDriveController"
+    base_class_type="controller_interface::ControllerInterface">
+    <description>
+      Custom 4-wheel skid-steer drive controller for Mercury UGV.
+      Handles robots with passive suspension arms between chassis and wheels.
+      Provides accurate 4-wheel odometry and suspension angle monitoring.
+    </description>
+  </class>
+</library>
