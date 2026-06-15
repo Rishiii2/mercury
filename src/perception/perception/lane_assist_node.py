@@ -31,6 +31,9 @@ Safety:
     cmd_vel through unchanged (stale / camera dead).
 """
 
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import rclpy
 from rclpy.node import Node
 from rclpy.time import Duration

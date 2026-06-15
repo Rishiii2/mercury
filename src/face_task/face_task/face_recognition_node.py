@@ -20,6 +20,9 @@ Parameters:
     detection_size       (int)   InsightFace input size, default 320
 """
 
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image

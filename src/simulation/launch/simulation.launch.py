@@ -75,6 +75,7 @@ def generate_launch_description():
                 '-topic', 'robot_description',
                 '-x', '-21.0',
                 '-y', '-47.0',
+                '-z', '0.30',
                 '-Y', '0',
             ],
             parameters=[{'use_sim_time': True}],    

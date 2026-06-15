@@ -38,6 +38,9 @@ PERSISTENCE:
   To reset: restart the node.
 """
 
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import math
 import numpy as np
 import cv2

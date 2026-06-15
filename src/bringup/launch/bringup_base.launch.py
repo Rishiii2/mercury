@@ -82,6 +82,22 @@ def generate_launch_description():
 
    
 
+    # ── Mercury Custom Driver ──────────────────────────────────────────────
+    mercury_driver = Node(
+        package='bringup',
+        executable='mercury_driver',
+        name='mercury_driver',
+        output='screen',
+        parameters=[{
+            'use_sim_time': True,
+            'initial_x': -21.0,
+            'initial_y': -47.0,
+            'initial_yaw': 0.0,
+            'wheel_separation': 0.664,
+            'wheel_radius': 0.155,
+        }]
+    )
+
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -102,5 +118,6 @@ def generate_launch_description():
         planning,
         perception,
         goal_decomposer,
+        mercury_driver,
         rviz_node,
     ])

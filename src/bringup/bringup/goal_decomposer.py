@@ -48,6 +48,9 @@ COMPLETE FIX SUMMARY:
     costmap builds, Nav2 replanns automatically)
 """
 
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import math
 import rclpy
 from rclpy.node import Node
