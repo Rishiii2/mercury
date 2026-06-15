@@ -20,8 +20,8 @@ timeout 15 ros2 topic echo /diff_drive_controller/odom --once || echo "Timeout o
 echo "=== Initial Ground Truth Odom (Gazebo) ==="
 timeout 15 ros2 topic echo /odom --once || echo "Timeout or no message on /odom"
 
-echo "=== Publishing cmd_vel_nav to move forward ==="
-ros2 topic pub --once /cmd_vel_nav geometry_msgs/msg/Twist "{linear: {x: 1.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
+echo "=== Publishing cmd_vel to move forward ==="
+ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 1.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
 
 echo "Waiting 5 seconds..."
 sleep 5

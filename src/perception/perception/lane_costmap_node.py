@@ -27,6 +27,9 @@ New parameter: ``blob_max_circularity`` (default 0.35)
 All other logic (projection, decay, Hough) is unchanged from v4.
 """
 
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import math
 import numpy as np
 import cv2

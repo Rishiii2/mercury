@@ -92,6 +92,9 @@ BUG FIXES vs v4
      (still smooth enough to reject single-frame noise).
 """
 
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import cv2
 import numpy as np
 from collections import deque

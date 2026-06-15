@@ -10,7 +10,7 @@ class WheelDiagNode(Node):
         super().__init__('wheel_diag_node')
         self.joint_states = []
         self.sub = self.create_subscription(JointState, '/joint_states', self.js_cb, 10)
-        self.pub = self.create_publisher(Twist, '/cmd_vel_nav', 10)
+        self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
         
         # Publish timer (10 Hz)
         self.timer = self.create_timer(0.1, self.pub_cb)

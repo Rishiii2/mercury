@@ -1,3 +1,6 @@
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
@@ -34,10 +37,10 @@ class MercuryDriver(Node):
         self.last_cmd_time = self.get_clock().now()
 
         # Command subscriber (receives linear/angular command velocities)
-        # Note: Subscribing to /cmd_vel_nav (which is output of lane_assist_node)
+        # Note: Subscribing to /cmd_vel (output of Nav2 controller)
         self.sub = self.create_subscription(
             Twist,
-            '/cmd_vel_nav',
+            '/cmd_vel',
             self.cmd_vel_cb,
             10
         )
@@ -79,10 +82,12 @@ class MercuryDriver(Node):
         right_joint_vel = right_vel / self.wheel_radius
 
         # 3. Both sides require positive velocity to roll forward (axis 0 1 0).
-        front_left = left_joint_vel
-        rear_left = left_joint_vel
-        front_right = right_joint_vel
-        rear_right = right_joint_vel
+        # Note: Due to URDF swap (left joint names are physically on the right side,
+        # and right joint names are physically on the left side), we swap the joint commands:
+        front_left = right_joint_vel
+        rear_left = right_joint_vel
+        front_right = left_joint_vel
+        rear_right = left_joint_vel
 
         # 4. Publish joint velocities
         cmd_msg = Float64MultiArray()

@@ -23,6 +23,9 @@ Safety: TWO independent obstacle checks per candidate (unchanged from v4):
   2. LaserScan     (/scan, real-time)
 """
 
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import math, json, os
 import numpy as np
 import cv2
