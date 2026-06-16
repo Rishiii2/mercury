@@ -365,7 +365,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /final_goal    # was /goal_pose
+        Value: /final_goal
     - Class: rviz_default_plugins/PublishPoint
       Single click: true
       Topic:
