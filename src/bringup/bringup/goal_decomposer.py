@@ -60,6 +60,7 @@ from nav_msgs.msg import Odometry, Path
 from nav2_msgs.action import NavigateToPose, ComputePathToPose
 from std_msgs.msg import String
 import tf_transformations
+import tf2_ros
 
 
 # ── Tiny helper: perpendicular-gate crossing test ─────────────────────────────
@@ -114,10 +115,13 @@ class GoalDecomposerNode(Node):
         self.plan_retry_delay = self.get_parameter('plan_retry_delay_sec').value
         self.nav2_settle      = self.get_parameter('nav2_settle_sec').value
 
-        # ── Robot pose ────────────────────────────────────────────────
         self.robot_x   = 0.0
         self.robot_y   = 0.0
         self.robot_yaw = 0.0
+
+        # TF Buffer and Listener to transform coordinates to the 'map' frame
+        self.tf_buffer = tf2_ros.Buffer()
+        self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
         # ── Mission state ─────────────────────────────────────────────
         # Each gate is: (wp_x, wp_y, wp_yaw, name, crossed:bool)
@@ -139,7 +143,7 @@ class GoalDecomposerNode(Node):
             PoseStamped, '/goal_decomposer/goal',
             self._goal_cb, 10)
         self.create_subscription(
-            Odometry, '/diff_drive_controller/odom',
+            Odometry, '/odometry/filtered',
             self._odom_cb, 10)
 
         # ── Publishers ────────────────────────────────────────────────
@@ -173,11 +177,25 @@ class GoalDecomposerNode(Node):
     # Odometry
     # ─────────────────────────────────────────────────────────────────
     def _odom_cb(self, msg: Odometry):
+        # 1. Default fallback to local odometry frame
         self.robot_x = msg.pose.pose.position.x
         self.robot_y = msg.pose.pose.position.y
         q = msg.pose.pose.orientation
         _, _, self.robot_yaw = tf_transformations.euler_from_quaternion(
             [q.x, q.y, q.z, q.w])
+
+        # 2. Try to update using global 'map' frame from TF tree
+        try:
+            # Now contains the latest transform
+            trans = self.tf_buffer.lookup_transform('map', 'base_link', rclpy.time.Time())
+            self.robot_x = trans.transform.translation.x
+            self.robot_y = trans.transform.translation.y
+            rot = trans.transform.rotation
+            _, _, self.robot_yaw = tf_transformations.euler_from_quaternion(
+                [rot.x, rot.y, rot.z, rot.w])
+        except Exception as e:
+            # Silent fallback during DDS/transform startup
+            pass
 
     # ─────────────────────────────────────────────────────────────────
     # Goal callback — called by RViz /goal_pose or terminal

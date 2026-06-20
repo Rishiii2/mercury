@@ -17,7 +17,7 @@ class MercuryDriver(Node):
         self.declare_parameter('wheel_radius', 0.155)
         self.declare_parameter('wheel_separation', 0.668)
         self.declare_parameter('cmd_timeout', 0.5) # seconds
-        self.declare_parameter('initial_x', 25.5)
+        self.declare_parameter('initial_x', 26.15)
         self.declare_parameter('initial_y', -18.5)
         self.declare_parameter('initial_yaw', -1.57)
         

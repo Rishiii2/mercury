@@ -73,9 +73,10 @@ def generate_launch_description():
             executable='create',
             arguments=[
                 '-topic', 'robot_description',
-                '-x', '-21.0',
-                '-y', '-47.0',
-                '-Y', '0',
+                '-x', '26.15',
+                '-y', '-18.5',
+                '-z', '0.30',
+                '-Y', '-1.57',
             ],
             parameters=[{'use_sim_time': True}],    
             output='screen'

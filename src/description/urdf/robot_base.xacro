@@ -36,6 +36,9 @@
           <mesh filename="file://$(find description)/meshes/chassis.dae"
                 scale="0.001 0.001 0.001"/>
         </geometry>
+       <material name="yellow_body">
+           <colour rgba="1.0 1.0 0.0 1.0"/>
+       </material>
       </visual>
       <collision>
         <geometry>
@@ -53,6 +56,7 @@
     </link>
 
     <gazebo reference="base_link">
+      <material>Gazebo/Yellow</material>
       <self_collide>false</self_collide>
     </gazebo>
 
@@ -127,7 +131,7 @@
                   scale="0.001 0.001 0.001"/>
           </geometry>
           <material name="black">
-            <color rgba="0.05 0.05 0.05 1"/>
+            <color rgba="0.5 0.0 1.0 1.0"/>
           </material>
         </visual>
         <collision>
@@ -190,7 +194,7 @@
       <visual>
         <geometry><box size="0.03 0.03 0.02"/></geometry>
         <origin xyz="0 0 0"/>
-        <material name="orange"><color rgba="1 0.5 0 1"/></material>
+        <material name="orange"><color rgba="0.5 0.0 1.0 1.0"/></material>
       </visual>
     </link>
     <joint name="imu_joint" type="fixed">
@@ -204,7 +208,7 @@
       <visual>
         <geometry><box size="0.03 0.03 0.02"/></geometry>
         <origin xyz="0 0 0"/>
-        <material name="white"><color rgba="1 1 1 1"/></material>
+        <material name="white"><color rgba="0.5 0.0 1.0 1.0"/></material>
       </visual>
     </link>
     <joint name="gps_joint" type="fixed">
@@ -218,7 +222,7 @@
       <visual>
         <geometry><cylinder radius="0.04" length="0.05"/></geometry>
         <origin xyz="0 0 0"/>
-        <material name="gray"><color rgba="0.6 0.6 0.6 1.0"/></material>
+        <material name="gray"><color rgba="0.5 0.0 1.0 1.0"/></material>
       </visual>
       <collision>
         <geometry><cylinder radius="0.04" length="0.05"/></geometry>
@@ -235,7 +239,7 @@
     <link name="pan_link">
       <visual>
         <geometry><cylinder radius="0.05" length="0.02"/></geometry>
-        <material name="red"><color rgba="1 0 0 1"/></material>
+        <material name="red"><color rgba="0.5 0.0 1.0 1.0"/></material>
       </visual>
       <collision>
         <geometry><cylinder radius="0.05" length="0.02"/></geometry>
@@ -259,7 +263,7 @@
     <link name="tilt_link">
       <visual>
         <geometry><box size="0.04 0.04 0.02"/></geometry>
-        <material name="black"><color rgba="0.1 0.1 0.1 1"/></material>
+        <material name="black"><color rgba="0.5 0.0 1.0 1.0"/></material>
       </visual>
       <collision>
         <geometry><box size="0.04 0.04 0.02"/></geometry>
@@ -283,7 +287,7 @@
     <link name="turret_camera_link">
       <visual>
         <geometry><box size="0.05 0.05 0.05"/></geometry>
-        <material name="Red"><color rgba="1 0 0 1"/></material>
+        <material name="Red"><color rgba="0.5 0.0 1.0 1.0"/></material>
       </visual>
       <collision>
         <geometry><box size="0.05 0.05 0.05"/></geometry>
@@ -304,7 +308,7 @@
     <link name="camera_link">
       <visual>
         <geometry><box size="0.05 0.05 0.05"/></geometry>
-        <material name="blue"><color rgba="0 0 1 1"/></material>
+        <material name="blue"><color rgba="0.5 0.0 1.0 1.0"/></material>
       </visual>
       <collision>
         <geometry><box size="0.05 0.05 0.05"/></geometry>

@@ -130,7 +130,7 @@ class WatchdogNode(Node):
         # ── Subscribers ──────────────────────────────────────────────────────
         if _HAVE_NAV:
             self.create_subscription(
-                Odometry, '/diff_drive_controller/odom',
+                Odometry, '/odometry/filtered',
                 lambda _: self._touch('odom'), 10
             )
         if _HAVE_SENSOR:
