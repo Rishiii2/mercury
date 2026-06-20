@@ -1,3 +1,6 @@
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 """
 goal_decomposer.py  (v7 — gate-only, no nav2 fighting)
 --------------------------------------------------------

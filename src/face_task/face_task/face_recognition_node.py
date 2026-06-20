@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 """
 face_recognition_node.py
 ========================

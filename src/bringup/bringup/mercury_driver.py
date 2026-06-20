@@ -1,3 +1,6 @@
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist

@@ -1,3 +1,6 @@
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 """
 lane_costmap_node.py  (v5 — circularity fix)
 ---------------------------------------------

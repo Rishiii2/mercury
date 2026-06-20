@@ -1,3 +1,6 @@
+import sys
+sys.path = [p for p in sys.path if '.local' not in p]
+
 """
 lane_detection.py  — v5 (clean math, robust calibration)
 ----------------------------------------------------------
