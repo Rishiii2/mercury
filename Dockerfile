@@ -1,4 +1,4 @@
-FROM osrf/ros:jazzy-desktop
+FROM osrf/ros:humble-desktop
 SHELL ["/bin/bash", "-c"]
 
 RUN apt update && apt install -y \
@@ -15,6 +15,6 @@ RUN if [ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then \
         rosdep init; \
     fi && rosdep update
 
-RUN echo "source /opt/ros/jazzy/setup.bash" >> /root/.bashrc
+RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
 
 CMD ["/bin/bash"]

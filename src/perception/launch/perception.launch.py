@@ -18,7 +18,7 @@ def generate_launch_description():
         parameters=[{
             'use_sim_time':       True,
             'image_topic':        '/camera/image_raw',
-            'show_debug':         True,
+            'show_debug':         False,
 
             'roi_top_frac':       0.4,
 

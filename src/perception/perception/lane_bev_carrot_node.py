@@ -34,7 +34,12 @@ from sensor_msgs.msg import Image, LaserScan
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Odometry, OccupancyGrid
 from ament_index_python.packages import get_package_share_directory
-import tf_transformations
+def euler_from_quaternion(q):
+    qx, qy, qz, qw = q
+    siny_cosp = 2 * (qw * qz + qx * qy)
+    cosy_cosp = 1 - 2 * (qy * qy + qz * qz)
+    yaw = math.atan2(siny_cosp, cosy_cosp)
+    return 0.0, 0.0, yaw
 
 _R_OPT = np.array([[0,0,1],[-1,0,0],[0,-1,0]], dtype=np.float64)
 
@@ -178,7 +183,7 @@ class LaneBevCarrotNode(Node):
         self._robot_x = msg.pose.pose.position.x
         self._robot_y = msg.pose.pose.position.y
         q = msg.pose.pose.orientation
-        _,_,self._robot_yaw = tf_transformations.euler_from_quaternion(
+        _,_,self._robot_yaw = euler_from_quaternion(
             [q.x,q.y,q.z,q.w])
 
     def _img_cb(self, msg):
@@ -387,7 +392,7 @@ class LaneBevCarrotNode(Node):
         bt = base_tf.transform.translation
         rx_map, ry_map = bt.x, bt.y
         bq = base_tf.transform.rotation
-        _, _, map_yaw = tf_transformations.euler_from_quaternion(
+        _, _, map_yaw = euler_from_quaternion(
             [bq.x, bq.y, bq.z, bq.w])
         fwd = np.array([math.cos(map_yaw), math.sin(map_yaw)])
 

@@ -18,4 +18,4 @@ navsat_transform_node:
     publish_filtered_gps: false
 
     use_odometry_yaw: false  # use IMU heading (not odom, to avoid circular dependency)
-    use_local_cartesian: false
+    use_local_cartesian: true

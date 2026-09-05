@@ -294,8 +294,9 @@ class LaneCostmapNode(Node):
 
         left_segs, right_segs = [], []
         if lines is not None:
+            lines = np.asarray(lines).reshape(-1, 4)
             for ln in lines:
-                x1, y1, x2, y2 = ln[0]
+                x1, y1, x2, y2 = ln
                 if x2 == x1:
                     continue
                 slope = abs((y2 - y1) / float(x2 - x1))

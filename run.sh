@@ -17,7 +17,7 @@ set -euo pipefail
 # Resolve workspace root as the directory this script is run from.
 WS_DIR="$(pwd)"
 
-ROS_SETUP="/opt/ros/jazzy/setup.zsh"
+ROS_SETUP="/opt/ros/humble/setup.zsh"
 WS_SETUP="${WS_DIR}/install/setup.zsh"
 
 if [[ ! -f "$ROS_SETUP" ]]; then

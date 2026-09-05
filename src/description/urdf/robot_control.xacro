@@ -4,7 +4,7 @@
 <xacro:macro name="control">
   <ros2_control name="SkidSteerSystem" type="system">
   <hardware>
-    <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    <plugin>ign_ros2_control/IgnitionSystem</plugin>
   </hardware>
 
   <!-- Wheels -->

@@ -4,8 +4,8 @@ Official repository for ICMTC UGVC-2026
 
 ## Prerequisites
 
-- Ubuntu 24.04
-- ROS 2 Jazzy
+- Ubuntu 22.04
+- ROS 2 Humble
 - colcon
 - rosdep
 - Docker (optional)
@@ -21,12 +21,23 @@ This repository is already a ROS 2 workspace.
 git clone <repo-url>
 cd mercury
 
-# Source ROS
-source /opt/ros/jazzy/setup.bash
+# Source ROS 2 Humble
+source /opt/ros/humble/setup.bash
 
-# Install dependencies
+# Install ROS 2 Humble system dependencies
+sudo apt update && sudo apt install -y \
+    ros-humble-robot-localization \
+    ros-humble-slam-toolbox \
+    ros-humble-navigation2 \
+    ros-humble-nav2-bringup \
+    ros-humble-ros-gz \
+    ros-humble-gz-ros2-control \
+    ros-humble-ros2-controllers
+
+# Install workspace dependencies via rosdep
+rosdep update
 rosdep install --from-paths src --ignore-src -r -y
-pip install opencv-python numpy psutil --break-system-packages
+pip install opencv-python numpy psutil
 
 # Build workspace
 colcon build
@@ -68,17 +79,19 @@ source ~/.bashrc
 Add this to your `~/.bashrc` or `~/.zshrc`:
 
 ```bash
-# ROS
-source /opt/ros/jazzy/setup.bash
+# ROS 2 Humble
+source /opt/ros/humble/setup.bash
 
 # Workspace
 source ~/mercury/install/setup.bash
 
 # Gazebo resource path
 export GZ_SIM_RESOURCE_PATH=$(ros2 pkg prefix simulation)/share/simulation/models:$GZ_SIM_RESOURCE_PATH
+export IGN_GAZEBO_RESOURCE_PATH=$(ros2 pkg prefix simulation)/share/simulation/models:$IGN_GAZEBO_RESOURCE_PATH
 
 # Gazebo system plugins
-export GZ_SIM_SYSTEM_PLUGIN_PATH=/opt/ros/jazzy/lib
+export GZ_SIM_SYSTEM_PLUGIN_PATH=/opt/ros/humble/lib
+export IGN_GAZEBO_SYSTEM_PLUGIN_PATH=/opt/ros/humble/lib
 
 # Python venv
 source ~/mercury_venv/bin/activate

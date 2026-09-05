@@ -20,6 +20,11 @@ class TwistToStamped(Node):
             '/cmd_vel_stamped',
             10
         )
+        self.pub_diff = self.create_publisher(
+            Twist,
+            '/diff_drive_controller/cmd_vel_unstamped',
+            10
+        )
 
     def callback(self, msg):
         stamped = TwistStamped()
@@ -27,6 +32,7 @@ class TwistToStamped(Node):
         stamped.header.frame_id = 'base_link'
         stamped.twist = msg
         self.pub.publish(stamped)
+        self.pub_diff.publish(msg)
 
 
 def main():

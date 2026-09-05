@@ -10,9 +10,9 @@ class GpsRelay(Node):
 
     def cb(self, msg):
         msg.header.frame_id = 'gps_link'
-        msg.position_covariance = [1.0, 0.0, 0.0,
-                                   0.0, 1.0, 0.0,
-                                   0.0, 0.0, 1.0]
+        msg.position_covariance = [0.05, 0.0, 0.0,
+                                   0.0, 0.05, 0.0,
+                                   0.0, 0.0, 0.05]
         msg.position_covariance_type = NavSatFix.COVARIANCE_TYPE_DIAGONAL_KNOWN
         self.pub.publish(msg)
 

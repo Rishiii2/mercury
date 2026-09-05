@@ -333,8 +333,9 @@ class LaneDetectionNode(Node):
         right_segs = []
 
         if lines is not None:
+            lines = np.asarray(lines).reshape(-1, 4)
             for line in lines:
-                x1, y1, x2, y2 = line[0]
+                x1, y1, x2, y2 = line
                 if x2 == x1:
                     continue
                 slope   = (y2 - y1) / (x2 - x1)
@@ -605,6 +606,9 @@ class LaneDetectionNode(Node):
         cv2.putText(debug, 'canny', (tw + 5, fh - th + 14),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.35, (180, 255, 180), 1)
 
+        if len(debug.shape) == 2:
+            debug = cv2.cvtColor(debug, cv2.COLOR_GRAY2BGR)
+        debug = np.ascontiguousarray(debug, dtype=np.uint8)
         debug_msg        = self.bridge.cv2_to_imgmsg(debug, encoding='bgr8')
         debug_msg.header = msg.header
         self.debug_pub.publish(debug_msg)

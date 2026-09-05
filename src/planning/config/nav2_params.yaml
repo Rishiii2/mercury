@@ -7,7 +7,7 @@ planner_server:
       # SmacPlanner2D uses A* — does NOT have NavFn's
       # "Failed to create plan from potential" backtracking bug.
       # More robust on large costmaps and unknown space.
-      plugin: "nav2_smac_planner::SmacPlanner2D"
+      plugin: "nav2_smac_planner/SmacPlanner2D"
       tolerance: 0.5
       downsample_costmap: false
       downsampling_factor: 1

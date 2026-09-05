@@ -30,18 +30,8 @@ def generate_launch_description():
         )
     )
 
-    lifecycle_manager = Node(
-        package='nav2_lifecycle_manager',
-        executable='lifecycle_manager',
-        name='lifecycle_manager_localization',
-        output='screen',
-        parameters=[{
-            'use_sim_time': True,
-            'autostart': True,
-            'bond_timeout': 10.0,
-            'node_names': ['slam_toolbox']
-        }]
-    )
+    # Note: async_slam_toolbox_node is a standard rclcpp node (not a lifecycle node),
+    # so it starts automatically without nav2_lifecycle_manager.
 
     # --- GPS localization pipeline ---
     pkg_loc = get_package_share_directory('localization')
@@ -71,7 +61,6 @@ def generate_launch_description():
     return LaunchDescription([
         ekf,
         slam,
-        lifecycle_manager,
         navsat_transform,
         gps_relay,
     ])

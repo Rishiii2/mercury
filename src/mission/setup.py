@@ -49,6 +49,7 @@ setup(
         "console_scripts": [
             "mission_setup = mission.mission_setup:main",
             "waypoint_sender = mission.waypoint_sender:main",
+            "send_goal = mission.send_goal:main",
         ],
     },
 )
